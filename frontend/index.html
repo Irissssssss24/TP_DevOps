@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Mes items</title>
+</head>
+<body>
+  <h1>Liste d'items</h1>
+  <input id="name" placeholder="Nouvel item">
+  <button onclick="addItem()">Ajouter</button>
+  <ul id="list"></ul>
+
+  <script>
+    async function loadItems() {
+      const res = await fetch("/api/items");
+      const items = await res.json();
+      document.getElementById("list").innerHTML =
+        items.map(i => `<li>${i.name}</li>`).join("");
+    }
+
+    async function addItem() {
+      const input = document.getElementById("name");
+      if (!input.value) return;
+      await fetch("/api/items", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: input.value })
+      });
+      input.value = "";
+      loadItems();
+    }
+
+    loadItems();
+  </script>
+</body>
+</html>
