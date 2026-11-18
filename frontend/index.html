@@ -8,6 +8,7 @@
   <h1>Liste d'items</h1>
   <input id="name" placeholder="Nouvel item">
   <button onclick="addItem()">Ajouter</button>
+  <button onclick="deleteItems()">Supprimer tous les items</button>
   <ul id="list"></ul>
 
   <script>
@@ -27,6 +28,11 @@
         body: JSON.stringify({ name: input.value })
       });
       input.value = "";
+      loadItems();
+    }
+
+    async function deleteItems() {
+      await fetch("/api/items", { method: "DELETE" });
       loadItems();
     }
 

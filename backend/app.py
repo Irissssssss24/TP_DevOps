@@ -59,6 +59,17 @@ def add_item():
     return jsonify({"id": new_id, "name": data["name"]}), 201
 
 
+@app.route("/items", methods=["DELETE"])
+def delete_items():
+    conn = get_conn()
+    cur = conn.cursor()
+    cur.execute("DELETE FROM items")
+    conn.commit()
+    cur.close()
+    conn.close()
+    return jsonify({"message": "All items deleted"}), 200
+
+
 if __name__ == "__main__":
     init_db()
     app.run(host="0.0.0.0", port=5000)
