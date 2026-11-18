@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Mes items</title>
+  <style>
+  li { cursor: pointer; margin: 4px 0; }
+  li.done { text-decoration: line-through; color: gray; }
+</style>
+</head>
+<body>
+  <h1>Liste d'items</h1>
+  <input id="name" placeholder="Nouvel item">
+  <button onclick="addItem()">Ajouter</button>
+  <button onclick="deleteItems()">Supprimer tous les items</button>
+  <ul id="list"></ul>
+
+  <script>
+    async function loadItems() {
+      const res = await fetch("/api/items");
+      const items = await res.json();
+      document.getElementById("list").innerHTML =
+        items.map(i => `<li>${i.name}</li>`).join("");
+    }
+
+    async function addItem() {
+      const input = document.getElementById("name");
+      if (!input.value) return;
+      await fetch("/api/items", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: input.value })
+      });
+      input.value = "";
+      loadItems();
+    }
+
+    async function deleteItems() {
+      await fetch("/api/items", { method: "DELETE" });
+      loadItems();
+    }
+
+    async function loadItems() {
+      const res = await fetch("/api/items");
+      const items = await res.json();
+      const list = document.getElementById("list");
+      list.innerHTML = "";
+      items.forEach(i => {
+        const li = document.createElement("li");
+        li.textContent = i.name;          // textContent évite l'injection de HTML
+        if (i.done) li.classList.add("done");
+        li.onclick = () => toggleItem(i.id);
+        list.appendChild(li);
+      });
+    }
+
+    async function toggleItem(id) {
+      await fetch(`/api/items/${id}/toggle`, { method: "PUT" });
+      loadItems();
+    }
+
+    loadItems();
+  </script>
+</body>
+</html>
