@@ -23,7 +23,10 @@ def init_db():
             cur = conn.cursor()
             cur.execute(
                 "CREATE TABLE IF NOT EXISTS items ("
-                "id SERIAL PRIMARY KEY, name TEXT NOT NULL)"
+                "id SERIAL PRIMARY KEY, name TEXT NOT NULL, done BOOLEAN NOT NULL DEFAULT FALSE)"
+            )
+            cur.execute(
+                "ALTER TABLE items ADD COLUMN IF NOT EXISTS done BOOLEAN NOT NULL DEFAULT FALSE"
             )
             conn.commit()
             cur.close()
@@ -39,11 +42,11 @@ def init_db():
 def list_items():
     conn = get_conn()
     cur = conn.cursor()
-    cur.execute("SELECT id, name FROM items ORDER BY id")
+    cur.execute("SELECT id, name, done FROM items ORDER BY id")
     rows = cur.fetchall()
     cur.close()
     conn.close()
-    return jsonify([{"id": r[0], "name": r[1]} for r in rows])
+    return jsonify([{"id": r[0], "name": r[1], "done": r[2]} for r in rows])
 
 
 @app.route("/items", methods=["POST"])
@@ -68,6 +71,23 @@ def delete_items():
     cur.close()
     conn.close()
     return jsonify({"message": "All items deleted"}), 200
+
+
+@app.route("/items/<int:item_id>/toggle", methods=["PUT"])
+def toggle_item(item_id):
+    conn = get_conn()
+    cur = conn.cursor()
+    cur.execute(
+        "UPDATE items SET done = NOT done WHERE id = %s RETURNING done",
+        (item_id,),
+    )
+    row = cur.fetchone()
+    conn.commit()
+    cur.close()
+    conn.close()
+    if row is None:
+        return jsonify({"error": "Item introuvable"}), 404
+    return jsonify({"id": item_id, "done": row[0]}), 200
 
 
 if __name__ == "__main__":

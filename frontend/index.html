@@ -3,6 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <title>Mes items</title>
+  <style>
+  li { cursor: pointer; margin: 4px 0; }
+  li.done { text-decoration: line-through; color: gray; }
+</style>
 </head>
 <body>
   <h1>Liste d'items</h1>
@@ -33,6 +37,25 @@
 
     async function deleteItems() {
       await fetch("/api/items", { method: "DELETE" });
+      loadItems();
+    }
+
+    async function loadItems() {
+      const res = await fetch("/api/items");
+      const items = await res.json();
+      const list = document.getElementById("list");
+      list.innerHTML = "";
+      items.forEach(i => {
+        const li = document.createElement("li");
+        li.textContent = i.name;          // textContent évite l'injection de HTML
+        if (i.done) li.classList.add("done");
+        li.onclick = () => toggleItem(i.id);
+        list.appendChild(li);
+      });
+    }
+
+    async function toggleItem(id) {
+      await fetch(`/api/items/${id}/toggle`, { method: "PUT" });
       loadItems();
     }
 
