@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: killian2470/tp_devops:frontend-prod
+          image: killian2470/tp_devops:backend-prod
           ports:
             - containerPort: 5000
           env:
@@ -30,15 +30,15 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: backend-service
+  name: backend
 spec:
   selector:
     app: backend
+  type: NodePort
   ports:
     - port: 5000
       targetPort: 5000
-  type: NodePort
-  nodePort: 30150
+      nodePort: 30150
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -67,8 +67,8 @@ metadata:
 spec:
   selector:
     app: frontend
+  type: NodePort
   ports:
     - port: 80
       targetPort: 80
-  type: NodePort
-  nodePort: 30081
+      nodePort: 30081
