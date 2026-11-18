@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: ####à remplir par killian
+          image: killian2470/tp_devops:backend-val
           ports:
             - containerPort: 5000
           env:
@@ -56,7 +56,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: ####à remplir par killian/app-front:val
+          image: killian2470/tp_devops:frontend-val
           ports:
             - containerPort: 80
 ---
