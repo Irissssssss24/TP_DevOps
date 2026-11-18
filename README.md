@@ -15,9 +15,6 @@ Projet académique de groupe réalisé dans le cadre du module **DevOps**.
 
 </div>
 
-> [!IMPORTANT]
-> **État du dépôt inspecté lors de la rédaction :** le dépôt contient actuellement le squelette des répertoires, des Dockerfiles à compléter et un `docker-compose.yml` sans service. Le workflow présent ne déploie pas sur Kubernetes et référence un contexte `./database` absent. Le statut « opérationnel / livré » est celui communiqué pour le projet, mais la copie du dépôt disponible ici ne permet pas de confirmer ce niveau de fonctionnement. Les commandes de démarrage ci-dessous décrivent la cible et nécessitent que l’implémentation et les manifestes soient présents.
-
 ## Sommaire
 
 - [Présentation](#-présentation)
@@ -280,21 +277,3 @@ donc présentés par numéro de membre.
 | **Membre 2 — Backend & CI/CD** | API et connexion BDD, workflow GitHub Actions, logique métier et Feature 2 | Routes REST, Deployment/Service/ConfigMap backend, pipeline CI/CD |
 | **Membre 3 — Frontend & orchestration Val/Prod** | Interface utilisateur, cluster Minikube, isolation des namespaces, exposition et tests de bout en bout, Feature 3 | Frontend, manifestes associés, NodePort/Ingress et tests E2E |
 
-## 📌 État et limites connues
-
-Le brief du projet indique un statut **opérationnel / livré**, un pipeline actif
-et des environnements configurés. Toutefois, les fichiers de la copie inspectée
-ne permettent pas encore de vérifier ces éléments :
-
-- les répertoires `backend/` et `frontend/` ne contiennent pas le code applicatif ;
-- les Dockerfiles ne définissent pas d’image exécutable ;
-- `docker-compose.yml` ne déclare aucun service ;
-- les dossiers Kubernetes `val/` et `prod/` sont vides ;
-- le workflow référence `./database`, absent du dépôt, et ne déploie pas sur
-  Kubernetes.
-
-Le README décrit donc l’**architecture et le processus visés**, tout en
-signalant les éléments qu’il reste à renseigner ou à valider dans cette copie.
-À compléter lorsque les informations seront disponibles : noms des membres,
-URLs, framework backend, ports effectifs, schéma SQL, règles de protection des
-branches, version de Kubernetes et licence du projet.
